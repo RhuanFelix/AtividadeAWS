@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:14-alpine
+    container_name: banco_atividade_aws
+    environment:
+      POSTGRES_DB: banco_atividade_aws
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - banco_atividade_aws:/var/lib/postgresql/data
+volumes:
+  banco_atividade_aws:
