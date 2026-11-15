@@ -12,7 +12,17 @@ spring:
     hibernate:
       ddl-auto: validate
 
+server:
+  servlet:
+    context-path: /api
+
 api:
   security:
     jwt:
       secret: chave-secreta
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
