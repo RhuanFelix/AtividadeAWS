@@ -15,20 +15,37 @@ Esta API faz parte de uma atividade proposta na disciplina de Sistemas Distribu�
 
 ## Funcionalidades
 
-Nem todas as funcionalidades estão implementadas; apenas as de autenticação e autorização estão prontas. As demais são planejadas para implementação futura.
-
 - Autenticação e autorização com Spring Security e JWT.
 - Hospedagem do servidor no EC2.
-- Armazenamento e consultas de arquivos no S3.
-- Utilização do IAM para definir permissões de usuário, limitando o que ele pode fazer dentro da aplicação.
+- Upload de arquivos de até 10 MB e download pelo backend, com armazenamento privado no S3.
+- Uso do STS para assumir `AdminS3Role` para administradores e `UserS3Role` para usuários comuns.
+
+## Configuração AWS
+
+A aplicação usa a cadeia padrão de credenciais do AWS SDK. Localmente, configure um perfil AWS; na EC2, anexe uma role de instância com `sts:AssumeRole` para as roles de acesso ao bucket. Não configure access keys no arquivo da aplicação.
+
+Propriedades configuráveis por ambiente (os valores entre parênteses são os padrões deste projeto):
+
+| Variável | Padrão |
+| --- | --- |
+| `AWS_REGION` | `us-east-2` |
+| `AWS_S3_BUCKET` | `armazenamento-s3-arquivos-sd` |
+| `AWS_ADMIN_ROLE_ARN` | `arn:aws:iam::286713861555:role/AdminS3Role` |
+| `AWS_USER_ROLE_ARN` | `arn:aws:iam::286713861555:role/UserS3Role` |
+
+A role da EC2 precisa de permissão para chamar `sts:AssumeRole` nos dois ARNs. A política de confiança de cada role S3 precisa confiar na role da EC2. As políticas dessas roles devem conceder `s3:PutObject` ao admin e `s3:GetObject` ao usuário, nos objetos do bucket. Os endpoints atuais não precisam de `s3:ListBucket`.
 
 ## Endpoints
 
-Atualmente, estão implementados os seguintes endpoints:
+Estão implementados os seguintes endpoints:
 
 - `/api/swagger-ui.html`: acessa o Swagger da API.
 - `/api/auth/register`: permite que o usuário se cadastre.
 - `/api/auth/login`: permite que o usuário faça login.
+- `POST /api/files`: envia multipart no campo `arquivo`; somente `ADMIN`; retorna a chave gerada.
+- `GET /api/files/{chave}`: baixa o arquivo; disponível para `ADMIN` e `USER`.
+
+O cadastro atualmente aceita a role enviada no corpo, conforme o requisito didático escolhido. Como o cadastro é público, qualquer pessoa pode solicitar `ADMIN`; isso não é apropriado para um ambiente real.
 
 ## Executando o projeto
 

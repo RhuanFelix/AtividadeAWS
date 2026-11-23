@@ -11,6 +11,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 11MB
 
 server:
   servlet:
@@ -20,6 +24,14 @@ api:
   security:
     jwt:
       secret: chave-secreta
+
+aws:
+  region: ${AWS_REGION:us-east-2}
+  s3:
+    bucket: ${AWS_S3_BUCKET:armazenamento-s3-arquivos-sd}
+  iam:
+    admin-role-arn: ${AWS_ADMIN_ROLE_ARN:arn:aws:iam::286713861555:role/AdminS3Role}
+    user-role-arn: ${AWS_USER_ROLE_ARN:arn:aws:iam::286713861555:role/UserS3Role}
 
 springdoc:
   api-docs:

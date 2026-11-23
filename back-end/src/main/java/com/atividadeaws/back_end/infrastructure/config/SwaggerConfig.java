@@ -23,7 +23,7 @@ public class SwaggerConfig {
                                 
                                 ## Funcionalidades
                                 
-                                Esta API possui a finalidade de realizar upload e consulta de arquivos que estão armazenados no S3, porém o usuário comum só pode visualizar os arquivos. Em contrapartida, o usuário administrador pode tanto fazer upload, quanto consultar arquivos no S3, passando pela autenticação do IAM.
+                                Esta API realiza upload e download de arquivos no S3. O JWT autentica o usuário, e a aplicação assume via STS uma role IAM correspondente: administradores podem enviar e baixar arquivos; usuários comuns podem apenas baixar.
                                 """)
                 );
     }
